@@ -1,98 +1,71 @@
-var mutex = 1, full = 0, empty, item = 0;
-// initialised semaphore mutex in the form of int. 
-// full variable tracks the full slots in buffer
-// empty variable tracks the empty slots in buffer
-
+var check = 0; // Counting Semaphore
+var mutex = 1; // Binary Semaphore
 var $output = $("#textArea");
-const executeBTN = document.getElementById("executeBTN");
 
-var btnLocation = 0;  //initialised btnLocation variable to keep track of location of placed buttons
+// Up Function
+function down(check, consumed) {
+  check -= consumed;
+  return check;
+}
 
-// Time Complexity = O(1)
+// Down Function
+function up(check) {
+  check++;
+  return check;
+}
+
 function producer() {
-    // while producer function is running, the mutex is set to 0. This is so that no other processes run while the producer function is running.
-    --mutex, ++full, --empty, item++;
+  var space = document.getElementById("bufferSize").value;
+  var produced_items = document.getElementById("nProducers").value;
+  var items_added = document.getElementById("added");
+  space++;
 
-    console.log("Producer produced: " + item);
-    $output.append("Producer produced: " + item + "\n");
+  if (mutex == 1) {
+    down(mutex, 1);
+    if (parseInt(check) + parseInt(produced_items) >= space) {
+      alert("Buffer Size should be greater than the items to be produced");
+    } else {
+      for (var i = 1; i <= produced_items; i++) {
+        var o =
+          '<button type="button" class="btn ml-3 my-2 third" id = ' +
+          (check + 1) +
+          ' onclick="add_entry(this.id)">' +
+          "Process" +
+          (check + 1) +
+          "</button>";
+        check = up(check);
+        items_added.innerHTML += o;
 
-    ++mutex;    //mutex is incremented back to 1 to signify the completion of producer process.
+        $output.append("Items Produced " + i + "\n");
+      }
+    }
+    up(mutex);
+  }
 }
 
-// Time Complexity = O(1)
 function consumer() {
-    --mutex, --full, ++empty;
+  var space = document.getElementById("bufferSize").value;
+  var consumed_items = document.getElementById("nConsumers").value;
 
-    console.log("Consumer consumed: " + item);
-    $output.append("Consumer consumed: " + item + "\n");
+  space++;
 
-    item--;
-    ++mutex;
+  if (mutex == 1) {
+    down(mutex);
+    if (check - consumed_items >= 0) {
+      for (var i = check; i > check - consumed_items; i--) {
+        var x = document.getElementById(i);
+        x.remove();
+        $output.append("Items consumed " + i + "\n");
+      }
+      check = down(check, consumed_items);
+    } else {
+      alert("Items consumed should be less than the items produced");
+    }
+    up(mutex);
+  }
 }
 
-// Time Complexity = O(n)
 function producerConsumer() {
-
-    executeBTN.style.visibility = "hidden";
-
-    var bufferSize = document.getElementById("bufferSize").value;
-    var nProducers = document.getElementById("nProducers").value;
-    var nConsumers = document.getElementById("nConsumers").value;
-
-    var btnContainer = document.getElementById("outputBTNcontainer");
-
-    empty = bufferSize;
-
-    // Checks if entered value is integer.
-    if ((Number.isInteger(parseInt(nProducers)) == false) || (Number.isInteger(parseInt(nConsumers)) == false) || (Number.isInteger(parseInt(bufferSize)) == false)) {
-        alert("Input value must be integer.");
-        resetPage();
-    }
-
-    // Checks if a value is entered.
-    if (nProducers.length == 0 || nConsumers.length == 0 || bufferSize.length == 0) {
-        alert("Please enter input in all fields.");
-        resetPage();
-    }
-
-    // Checks if entered value is positive.
-    if (parseInt(nProducers) < 0 || parseInt(nConsumers) < 0 || parseInt(bufferSize) <= 0) {
-        alert("Buffer size should be greater than 0, Number of produced items, and number of items to be consumed should not be negative.");
-        resetPage();
-    }
-
-    // Checks if number of produced items is greater than size of buffer.
-    if (parseInt(nProducers) > parseInt(bufferSize)) {
-        alert("Number of items produced can't be greater than buffer size.");
-        resetPage();
-    }
-
-    // Check if number of items to be consumed is greater than number of items produced. 
-    if (parseInt(nConsumers) > parseInt(nProducers)) {
-        alert("Number of items consumed can't be greater than number of items produced.");
-        resetPage();
-    }
-
-    else {
-        //this loop calls producer function that produces an item.
-        for (let i = 0; i < parseInt(nProducers); i++) 
-            if ((mutex == 1) && (empty != 0)) 
-                producer();
-
-        //this loop calls consumer function that consumes an item.
-        for (let i = 0; i < parseInt(nConsumers); i++) 
-            if ((mutex == 1) && (full != 0)) 
-                consumer(); 
-
-        //this for loop shows buttons on screen in a row for visualisation purpose.
-        for (let i = 0; i < parseInt(nProducers) - parseInt(nConsumers); i++) {
-            var buttonOut = '<button type="button" class="outputBTN' + (btnLocation + 1) + '">' + 'P' + (btnLocation + 1) + '</button>';
-            btnLocation++;
-            btnContainer.innerHTML += buttonOut;
-        }
-    }
-}
-
-function resetPage() {
-    location.reload();
+  producer();
+  consumer();
 }
