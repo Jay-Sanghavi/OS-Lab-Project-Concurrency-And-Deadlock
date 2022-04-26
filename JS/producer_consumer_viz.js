@@ -66,6 +66,9 @@ function consumer() {
 }
 
 function producerConsumer() {
+  executeBTN.style.visibility = "hidden";
   producer();
   consumer();
+  
 }
+
