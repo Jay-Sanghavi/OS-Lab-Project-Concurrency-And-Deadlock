@@ -40,17 +40,17 @@
             <label for="process">
                 <p class="form-para">Enter the size of Buffer: </p>
             </label>
-            <input type="text" id="bufferSize" name="bufferSize">
+            <input id="bufferSize" name="bufferSize" type="number" min="1" oninput="this.value = Math.abs(this.value)">
 
             <label for="time">
                 <p class="form-para">Enter the number of items to be produced: </p>
             </label>
-            <input type="text" id="nProducers" name="noOfProducers">
+            <input id="nProducers" name="noOfProducers" type="number" min="0" oninput="this.value = Math.abs(this.value)">
 
             <label for="time">
                 <p class="form-para">Enter the number of items to be consumed: </p>
             </label>
-            <input type="text" id="nConsumers" name="noOfConsumers">
+            <input id="nConsumers" name="noOfConsumers" type="number" min="0" oninput="this.value = Math.abs(this.value)">
         </div>
 
         <div class="pdfLogs" style="margin-left: 650px">
@@ -58,12 +58,13 @@
         </div>
 
         <a href="#"><button class="p-btn" id="executeBTN" onclick="producerConsumer()">Execute</button></a>
-        <a href="#"><button class="p-btn" id="resetBTN" onclick="resetPage()">Reset</button></a>
+        <a href="#"><button class="p-btn" id="resetBTN" onclick="window.location.reload()">Reset</button></a>
 
 
         <div class="visual">
             <p>Buffer after the whole process is completed: </p>
         </div>
+        <div class="continer pl-4" id="added"></div>
         <div class="container" id='outputBTNcontainer'></div>
 
 
@@ -71,7 +72,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-        <script src="../JS/producer_consumer_viz.js"></script>
+        <script type="text/javascript" src="../JS/producer_consumer_viz.js"></script>
 
 </body>
 
