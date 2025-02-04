@@ -7,7 +7,7 @@
 
 ## Concurrency and Deadlock:
 
-The visualisation of four concurrency and deadlock algorithms are available:
+The visualization of 4 concurrency and deadlock algorithms is available:
 
 1. Banker's Algorithm
 2. Peterson's Method
@@ -16,8 +16,8 @@ The visualisation of four concurrency and deadlock algorithms are available:
 
 ### Contributors:
 
-1. Jahnavi Lalwani
+1. Jay Sanghavi
 2. Devesh Patel
 3. Aakash Bhandary
 4. Aakash Malvi
-5. Jay Sanghavi
+5.  Jahnavi Lalwani 
